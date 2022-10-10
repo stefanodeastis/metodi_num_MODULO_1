@@ -72,6 +72,23 @@ def version3 (start,delta,n_generated, mean, dev_std):
             gaussian[i+1]=gaussian[i]
     return gaussian
 
+def version4 (start,delta,n_generated, mean, dev_std):
+    random.seed(time.time())
+    uniform=np.random.uniform(size=n_generated)
+    gaussian=np.zeros(n_generated)
+    gaussian[0]=start
+    random.seed(time.time())
+    prove=np.random.uniform(size=n_generated)
+
+    for i in range (n_generated-1):
+        x_p=prove[i]*2*delta+gaussian[i]-delta
+    #genero un numero nell'intervallo [x_k-delta,x_k+delta]
+        prob=np.e**((-(x_p-mean)**2+(gaussian[i]-mean)**2)/(2*dev_std**2))
+        if uniform[i] <= prob:
+            gaussian[i+1]=x_p
+        else:
+            gaussian[i+1]=gaussian[i]
+    return gaussian
 
 def dati(array,n_generated):
     mean=np.mean(gauss)
@@ -94,7 +111,7 @@ if __name__ == '__main__':
     #gauss=version1(x_0,1)
     #gauss=version2(x_0,1)
 
-    gauss=version3(args.start,args.delta,args.n_tot,args.mean,args.devstd)
+    gauss=version4(args.start,args.delta,args.n_tot,args.mean,args.devstd)
     #uniform=np.array([random.random() for i in range (LUNGH)])
     dati(gauss,args.n_tot)
 
